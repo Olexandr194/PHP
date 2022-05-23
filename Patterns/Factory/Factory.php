@@ -1,16 +1,26 @@
 <?php
 
+namespace RefactoringGuru\FactoryMethod\Conceptual;
+
+/**
+ * The Creator class declares the factory method that is supposed to return an
+ * object of a Product class. The Creator's subclasses usually provide the
+ * implementation of this method.
+ */
 abstract class Creator
 {
-    /**Зауважте, що Творець також може надати деяку реалізацію заводського методу за замовчуванням.*/
+    /**
+     * Note that the Creator may also provide some default implementation of the
+     * factory method.
+     */
     abstract public function factoryMethod(): Product;
 
     /**
-     * Також зауважте, що, незважаючи на назву, головна відповідальність
-     * Творця не полягає у створенні продуктів. Зазвичай він містить деяку основну бізнес-логіку,
-     * яка спирається на об’єкти Product, повернуті заводським методом. Підкласи можуть опосередковано
-     * змінити цю бізнес-логіку, перевизначивши заводський метод
-     * і повернення з нього товару іншого типу.
+     * Also note that, despite its name, the Creator's primary responsibility is
+     * not creating products. Usually, it contains some core business logic that
+     * relies on Product objects, returned by the factory method. Subclasses can
+     * indirectly change that business logic by overriding the factory method
+     * and returning a different type of product from it.
      */
     public function someOperation(): string
     {
@@ -25,14 +35,16 @@ abstract class Creator
 }
 
 /**
- * Concrete Creators замінюють заводський метод, щоб змінити тип продукту.
+ * Concrete Creators override the factory method in order to change the
+ * resulting product's type.
  */
 class ConcreteCreator1 extends Creator
 {
     /**
-     * Зауважте, що в сигнатурі методу все ще використовується абстрактний тип продукту,
-     * навіть якщо конкретний продукт фактично повертається методом.
-     * Таким чином Творець може залишатися незалежним від конкретних класів продуктів.
+     * Note that the signature of the method still uses the abstract product
+     * type, even though the concrete product is actually returned from the
+     * method. This way the Creator can stay independent of concrete product
+     * classes.
      */
     public function factoryMethod(): Product
     {
@@ -49,8 +61,8 @@ class ConcreteCreator2 extends Creator
 }
 
 /**
- * Інтерфейс продукту оголошує операції, які повинні виконувати всі конкретні продукти.
-
+ * The Product interface declares the operations that all concrete products must
+ * implement.
  */
 interface Product
 {
@@ -58,7 +70,7 @@ interface Product
 }
 
 /**
- * Concrete Products забезпечують різні реалізації інтерфейсу продукту.
+ * Concrete Products provide various implementations of the Product interface.
  */
 class ConcreteProduct1 implements Product
 {
@@ -77,9 +89,9 @@ class ConcreteProduct2 implements Product
 }
 
 /**
- * Клієнтський код працює з екземпляром конкретного творця, хоча через його базовий інтерфейс.
- * Поки клієнт продовжує працювати з автором через базовий інтерфейс,
- * ви можете передати йому будь-який підклас творця.
+ * The client code works with an instance of a concrete creator, albeit through
+ * its base interface. As long as the client keeps working with the creator via
+ * the base interface, you can pass it any creator's subclass.
  */
 function clientCode(Creator $creator)
 {
@@ -90,7 +102,8 @@ function clientCode(Creator $creator)
 }
 
 /**
- * Програма вибирає тип творця залежно від конфігурації або середовища.
+ * The Application picks a creator's type depending on the configuration or
+ * environment.
  */
 echo "App: Launched with the ConcreteCreator1.\n";
 clientCode(new ConcreteCreator1());
