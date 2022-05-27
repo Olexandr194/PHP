@@ -110,12 +110,12 @@ class Director
         $this->builder = $builder;
     }
 
-    public function buildMinimalViableProduct(): void
+    public function buildMinimalProduct(): void
     {
         $this->builder->carWash();
     }
 
-    public function buildFullFeaturedProduct(): void
+    public function buildFullProduct(): void
     {
         $this->builder->carWash();
         $this->builder->varnish();
@@ -129,11 +129,11 @@ function clientCode(Director $director)
     $director->setBuilder($builder);
 
     /*echo "Standard basic services:\n";
-    $director->buildMinimalViableProduct();
+    $director->buildMinimalProduct();
     $builder->getProduct()->listParts();
 
     echo "Standard full featured services:\n";
-    $director->buildFullFeaturedProduct();
+    $director->buildFullProduct();
     $builder->getProduct()->listParts();*/
 
     echo "Custom services:\n";

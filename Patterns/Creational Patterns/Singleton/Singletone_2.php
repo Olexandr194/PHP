@@ -22,7 +22,7 @@ class Singleton
 }
 $Object = Singleton::getInstance();
 
-//Вывод будет одинаковым, так как существует только один экземпляр
+
 $Object -> test();
 Singleton::getInstance() -> test();
 

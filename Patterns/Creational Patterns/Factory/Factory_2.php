@@ -9,7 +9,7 @@ abstract class BikeFactory
     {
         $bikes = $this->factoryMethod();
 
-        $result = $bikes->operation(). " $bikeName has been created.";
+        $result = $bikes->operation() . " Factory_2.php";
 
         echo $result;
     }
