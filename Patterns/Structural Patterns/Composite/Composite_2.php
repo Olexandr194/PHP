@@ -6,14 +6,12 @@ interface Employee
     public function getName();
     public function setSalary($salary);
     public function getSalary();
-    public function getRoles();
 }
 
 class Developer implements Employee
 {
     protected $salary;
     protected $name;
-    protected $role;
 
     public function __construct($name, $salary)
     {
@@ -36,17 +34,12 @@ class Developer implements Employee
         return $this->salary;
     }
 
-    public function getRoles()
-    {
-        return $this->role;
-    }
 }
 
 class Designer implements Employee
 {
     protected $salary;
     protected $name;
-    protected $role;
 
     public function __construct($name, $salary)
     {
@@ -69,10 +62,6 @@ class Designer implements Employee
         return $this->salary;
     }
 
-    public function getRoles()
-    {
-        return $this->role;
-    }
 }
 
 class Organization
@@ -84,7 +73,7 @@ class Organization
         $this->employees[] = $employee;
     }
 
-    public function getNetSalaries()
+    public function getAllSalaries()
     {
         $netSalary = 0;
 
@@ -95,12 +84,18 @@ class Organization
     }
 }
 
-$man1 = new Developer('name1', 489);
+function clientCode(Organization $organization)
+{
+    echo "RESULT: " . $organization->getAllSalaries();
+}
+
+
+$man1 = new Developer('name1', 485);
 $man2 = new Developer('name2', 4849);
 $man3 = new Developer('name3', 4894);
 
 $man4 = new Designer('name4', 749);
-$man5 = new Designer('name5', 649);
+$man5 = new Designer('name5', 568);
 
 $organization = new Organization();
 $organization->addEmployee($man1);
@@ -109,4 +104,6 @@ $organization->addEmployee($man3);
 $organization->addEmployee($man4);
 $organization->addEmployee($man5);
 
-echo $organization->getNetSalaries();
+clientCode($organization);
+
+

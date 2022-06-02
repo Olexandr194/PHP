@@ -10,7 +10,7 @@ class Coffee implements SomeDrink
 {
     public function getCost()
     {
-        return '20';
+        return 25;
     }
 
     public function getDescription()
@@ -41,14 +41,9 @@ class Decorator implements SomeDrink
     }
 }
 
-class MilkCoffee extends Coffee
+class MilkCoffee extends Decorator
 {
     protected $someDrink;
-
-    public function __construct(SomeDrink $someDrink)
-    {
-        $this->someDrink = $someDrink;
-    }
 
     public function getCost()
     {
@@ -61,18 +56,13 @@ class MilkCoffee extends Coffee
     }
 }
 
-class IrishCoffee extends Coffee
+class IrishCoffee extends Decorator
 {
     protected $someDrink;
 
-    public function __construct(SomeDrink $someDrink)
-    {
-        $this->someDrink = $someDrink;
-    }
-
     public function getCost()
     {
-        return $this->someDrink->getCost() +15;
+        return $this->someDrink->getCost() +17;
     }
 
     public function getDescription()
@@ -93,6 +83,6 @@ clientCode($simple);
 
 
 $decorator1 = new MilkCoffee($simple);
-$decorator2 = new IrishCoffee($decorator1);
+/*$decorator2 = new IrishCoffee($decorator1);*/
 
-clientCode($decorator2);
+clientCode($decorator1);

@@ -1,44 +1,51 @@
 <?php
 
-class SimpleBook {
-    private $author;
-    private $title;
-    function __construct($author_in, $title_in) {
-        $this->author = $author_in;
-        $this->title  = $title_in;
-    }
-    function getAuthor() {
-        return $this->author;
-    }
-    function getTitle() {
-        return $this->title;
+class Target
+{
+    public function request(): string
+    {
+        return "Target: The default target's behavior.";
     }
 }
 
-class BookAdapter {
-    private $book;
-    function __construct(SimpleBook $book_in) {
-        $this->book = $book_in;
-    }
-    function getAuthorAndTitle() {
-        return $this->book->getTitle().' by '.$this->book->getAuthor();
+class Adaptee
+{
+    public function specificRequest(): string
+    {
+        return ".eetpadA eht fo roivaheb laicepS";
     }
 }
 
-// client
+class Adapter extends Target
+{
+    private $adaptee;
 
-writeln('BEGIN TESTING ADAPTER PATTERN');
-writeln('');
+    public function __construct(Adaptee $adaptee)
+    {
+        $this->adaptee = $adaptee;
+    }
 
-$book = new SimpleBook("Gamma, Helm, Johnson, and Vlissides", "Design Patterns");
-$bookAdapter = new BookAdapter($book);
-writeln('Author and Title: '.$bookAdapter->getAuthorAndTitle());
-writeln('');
-
-writeln('END TESTING ADAPTER PATTERN');
-
-function writeln($line_in) {
-    echo $line_in."<br/>";
+    public function request(): string
+    {
+        return "Adapter: (TRANSLATED) " . strrev($this->adaptee->specificRequest());
+    }
 }
 
-?>
+function clientCode(Target $target)
+{
+    echo $target->request();
+}
+
+echo "Client: I can work just fine with the Target objects:\n";
+$target = new Target();
+clientCode($target);
+echo "\n\n";
+
+$adaptee = new Adaptee();
+echo "Client: The Adaptee class has a weird interface. See, I don't understand it:\n";
+echo "Adaptee: " . $adaptee->specificRequest();
+echo "\n\n";
+
+echo "Client: But I can work with it via the Adapter:\n";
+$adapter = new Adapter($adaptee);
+clientCode($adapter);

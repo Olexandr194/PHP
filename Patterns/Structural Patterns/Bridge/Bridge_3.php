@@ -6,7 +6,7 @@ interface CarFactory {
 }
 
 class Renault implements CarFactory {
-    protected $color;
+    private $color;
 
     public function __construct(Color $color)
     {
@@ -20,7 +20,7 @@ class Renault implements CarFactory {
 }
 
 class BMW implements CarFactory {
-    protected $color;
+    private $color;
 
     public function __construct(Color $color)
     {

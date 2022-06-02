@@ -1,6 +1,6 @@
 <?php
 
-class PayPal
+class Privat
 {
     public function pay(): string
     {
@@ -16,7 +16,7 @@ class Adaptee
     }
 }
 
-class Adapter extends PayPal
+class Adapter extends Privat
 {
     private $adaptee;
 

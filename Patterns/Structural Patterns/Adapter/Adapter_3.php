@@ -1,45 +1,49 @@
 <?php
 
-class PayPal
+class Privat
 {
-    public function sendPayment(): string
+    public function pay()
     {
-        return 'Paying via PayPal: ';
+        echo 'Privat pay';
     }
 }
 
-class Adaptee
+class Mono
 {
-    public function payAmount(): string
-    {
-        return 'Paying via PayPal NEW : ';
+    public function monoPay(){
+        echo 'Mono pay';
+
     }
 }
 
-class Adapter extends PayPal
+class MonoAdapter extends Privat
 {
-    private $adaptee;
+    protected $mono;
 
-    public function __construct(Adaptee $adaptee)
+    public function __construct(Mono $mono)
     {
-        $this->adaptee = $adaptee;
+        $this->mono = $mono;
     }
 
-    public function sendPayment(): string
+    public function pay()
     {
-        return $this->adaptee->payAmount();
+        $this->mono->monoPay();
     }
 }
 
-function clientCode(PayPal $payPal)
+
+function clientCode(Privat $privat)
 {
-    echo $payPal->sendPayment();
+    echo $privat->pay();
 }
 
+$privat = new Privat();
+clientCode($privat);
+
+echo PHP_EOL;
+
+$mono = new Mono();
+$monoAdapter = new MonoAdapter($mono);
+clientCode($monoAdapter);
 
 
-
-$adaptee = new Adaptee();
-
-$adapter = new Adapter($adaptee);
-clientCode($adapter);
