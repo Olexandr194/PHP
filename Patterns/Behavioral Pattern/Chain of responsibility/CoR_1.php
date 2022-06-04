@@ -1,92 +1,208 @@
 <?php
-interface Handler
+
+abstract class Middleware
 {
-    public function setNext(Handler $handler): Handler;
+    /**
+     * @var Middleware
+     */
+    private $next;
 
-    public function handle(string $request): ?string;
-}
-
-abstract class AbstractHandler implements Handler
-{
-    private $nextHandler;
-
-    public function setNext(Handler $handler): Handler
+    /**
+     * This method can be used to build a chain of middleware objects.
+     */
+    public function linkWith(Middleware $next): Middleware
     {
-        $this->nextHandler = $handler;
-        // Returning a handler from here will let us link handlers in a
-        // convenient way like this:
-        // $monkey->setNext($squirrel)->setNext($dog);
-        return $handler;
+        $this->next = $next;
+
+        return $next;
     }
 
-    public function handle(string $request): ?string
+    /**
+     * Subclasses must override this method to provide their own checks. A
+     * subclass can fall back to the parent implementation if it can't process a
+     * request.
+     */
+    public function check(string $email, string $password): bool
     {
-        if ($this->nextHandler) {
-            return $this->nextHandler->handle($request);
+        if (!$this->next) {
+            return true;
         }
 
-        return null;
+        return $this->next->check($email, $password);
     }
 }
 
-class MonkeyHandler extends AbstractHandler
+/**
+ * This Concrete Middleware checks whether a user with given credentials exists.
+ */
+class UserExistsMiddleware extends Middleware
 {
-    public function handle(string $request): ?string
+    private $server;
+
+    public function __construct(Server $server)
     {
-        if ($request === "Banana") {
-            return "Monkey: I'll eat the " . $request . ".\n";
-        } else {
-            return parent::handle($request);
-        }
+        $this->server = $server;
     }
-}
 
-class SquirrelHandler extends AbstractHandler
-{
-    public function handle(string $request): ?string
+    public function check(string $email, string $password): bool
     {
-        if ($request === "Nut") {
-            return "Squirrel: I'll eat the " . $request . ".\n";
-        } else {
-            return parent::handle($request);
+        if (!$this->server->hasEmail($email)) {
+            echo "UserExistsMiddleware: This email is not registered!\n";
+
+            return false;
         }
+
+        if (!$this->server->isValidPassword($email, $password)) {
+            echo "UserExistsMiddleware: Wrong password!\n";
+
+            return false;
+        }
+
+        return parent::check($email, $password);
     }
 }
 
-class DogHandler extends AbstractHandler
+/**
+ * This Concrete Middleware checks whether a user associated with the request
+ * has sufficient permissions.
+ */
+class RoleCheckMiddleware extends Middleware
 {
-    public function handle(string $request): ?string
+    public function check(string $email, string $password): bool
     {
-        if ($request === "MeatBall") {
-            return "Dog: I'll eat the " . $request . ".\n";
-        } else {
-            return parent::handle($request);
+        if ($email === "admin@example.com") {
+            echo "RoleCheckMiddleware: Hello, admin!\n";
+
+            return true;
         }
+        echo "RoleCheckMiddleware: Hello, user!\n";
+
+        return parent::check($email, $password);
     }
 }
 
-function clientCode(Handler $handler)
+/**
+ * This Concrete Middleware checks whether there are too many failed login
+ * requests.
+ */
+class ThrottlingMiddleware extends Middleware
 {
-    foreach (["Nut", "Banana", "Cup of coffee"] as $food) {
-        echo "Client: Who wants a " . $food . "?\n";
-        $result = $handler->handle($food);
-        if ($result) {
-            echo "  " . $result;
-        } else {
-            echo "  " . $food . " was left untouched.\n";
+    private $requestPerMinute;
+
+    private $request;
+
+    private $currentTime;
+
+    public function __construct(int $requestPerMinute)
+    {
+        $this->requestPerMinute = $requestPerMinute;
+        $this->currentTime = time();
+    }
+
+    /**
+     * Please, note that the parent::check call can be inserted both at the
+     * beginning of this method and at the end.
+     *
+     * This gives much more flexibility than a simple loop over all middleware
+     * objects. For instance, a middleware can change the order of checks by
+     * running its check after all the others.
+     */
+    public function check(string $email, string $password): bool
+    {
+        if (time() > $this->currentTime + 60) {
+            $this->request = 0;
+            $this->currentTime = time();
         }
+
+        $this->request++;
+
+        if ($this->request > $this->requestPerMinute) {
+            echo "ThrottlingMiddleware: Request limit exceeded!\n";
+            die();
+        }
+
+        return parent::check($email, $password);
     }
 }
 
-$monkey = new MonkeyHandler();
-$squirrel = new SquirrelHandler();
-$dog = new DogHandler();
+/**
+ * This is an application's class that acts as a real handler. The Server class
+ * uses the CoR pattern to execute a set of various authentication middleware
+ * before launching some business logic associated with a request.
+ */
+class Server
+{
+    private $users = [];
 
-$monkey->setNext($squirrel)->setNext($dog);
+    /**
+     * @var Middleware
+     */
+    private $middleware;
 
-echo "Chain: Monkey > Squirrel > Dog\n\n";
-clientCode($monkey);
-echo "\n";
+    /**
+     * The client can configure the server with a chain of middleware objects.
+     */
+    public function setMiddleware(Middleware $middleware): void
+    {
+        $this->middleware = $middleware;
+    }
 
-echo "Subchain: Squirrel > Dog\n\n";
-clientCode($squirrel);
+    /**
+     * The server gets the email and password from the client and sends the
+     * authorization request to the middleware.
+     */
+    public function logIn(string $email, string $password): bool
+    {
+        if ($this->middleware->check($email, $password)) {
+            echo "Server: Authorization has been successful!\n";
+
+            // Do something useful for authorized users.
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public function register(string $email, string $password): void
+    {
+        $this->users[$email] = $password;
+    }
+
+    public function hasEmail(string $email): bool
+    {
+        return isset($this->users[$email]);
+    }
+
+    public function isValidPassword(string $email, string $password): bool
+    {
+        return $this->users[$email] === $password;
+    }
+}
+
+/**
+ * The client code.
+ */
+$server = new Server();
+$server->register("admin@example.com", "admin_pass");
+$server->register("user@example.com", "user_pass");
+
+// All middleware are chained. The client can build various configurations of
+// chains depending on its needs.
+$middleware = new ThrottlingMiddleware(2);
+$middleware
+    ->linkWith(new UserExistsMiddleware($server))
+    ->linkWith(new RoleCheckMiddleware());
+
+// The server gets a chain from the client code.
+$server->setMiddleware($middleware);
+
+// ...
+
+do {
+    echo "\nEnter your email:\n";
+    $email = readline();
+    echo "Enter your password:\n";
+    $password = readline();
+    $success = $server->logIn($email, $password);
+} while (!$success);
