@@ -38,7 +38,7 @@ class turnOffRadio implements radioCommand {
 
 
 // Client
-$in = 'turnOffRadio';
+$in = 'turnORadio';
 
 // Invoker
 if (class_exists ( $in )) {
