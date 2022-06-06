@@ -1,63 +1,12 @@
 <?php
 
-/**
- * Editor which have possibility to save and restore the state if necessary.
- */
-class Editor
+class NoteBook
 {
-    // content is hidden
     private $content = '';
 
-    public function type(string $words)
+    public function type($words)
     {
         $this->content = $this->content . ' ' . $words;
-    }
-
-    public function getContent(): string
-    {
-        return $this->content;
-    }
-
-    /**
-     * Saves the current state inside a memento snapshot
-     */
-    public function save(): EditorMemento
-    {
-        return new EditorMemento($this->content);
-    }
-
-    /**
-     * Restores the editor's state from a memento object
-     * @param EditorMemento $memento
-     */
-    public function restore(EditorMemento $memento)
-    {
-        $this->content = $memento->getContent();
-    }
-}
-
-/**
- * The Memento interface provides a way to retrieve the memento's metadata, such as creation date
- */
-interface Memento
-{
-    public function getDate();
-}
-
-/**
- * Concrete Memento contains the infrastructure for storing the editor's state.
- * Tip: in real life you probably prefer to make a copy of an object's state easier
- * by simply using a PHP serialization.
- */
-class EditorMemento implements Memento
-{
-    protected $content;
-    protected $date;
-
-    public function __construct(string $content)
-    {
-        $this->content = $content;
-        $this->date = date('Y-m-d');
     }
 
     public function getContent()
@@ -65,25 +14,48 @@ class EditorMemento implements Memento
         return $this->content;
     }
 
-    public function getDate()
+    public function save(): SnapShot
     {
-        return $this->date;
+        return new SnapShot($this->content);
+    }
+
+    public function restore(SnapShot $memento)
+    {
+        $this->content = $memento->getContent();
     }
 }
 
+interface Memento
+{
+    public function getContent();
+}
 
-# Client code example
-$editor = new Editor();
-$editor->type('This is the first sentence.');
-$editor->type('This is second.');
-// make a snapshot
+class SnapShot implements Memento
+{
+    protected $content;
+
+    public function __construct($content)
+    {
+        $this->content = $content;
+    }
+
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+}
+
+
+
+$editor = new NoteBook();
+$editor->type('Some text.');
+$editor->type('Text before saving.');
 $memento = $editor->save();
 
-$editor->type('And this is third.');
+$editor->type('And text after making a snapshot.');
 echo $editor->getContent() . PHP_EOL;
-/* Output: This is the first sentence. This is second. And this is third. */
 
-// restore the state from snapshot
+
 $editor->restore($memento);
 echo $editor->getContent() . PHP_EOL;
-/* Output: This is the first sentence. This is second. */

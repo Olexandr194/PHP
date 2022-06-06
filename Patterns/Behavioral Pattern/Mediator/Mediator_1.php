@@ -1,19 +1,10 @@
 <?php
 
-/**
- * The Mediator interface declares a method used by components to notify the
- * mediator about various events. The Mediator may react to these events and
- * pass the execution to other components.
- */
 interface Mediator
 {
     public function notify(object $sender, string $event): void;
 }
 
-/**
- * Concrete Mediators implement cooperative behavior by coordinating several
- * components.
- */
 class ConcreteMediator implements Mediator
 {
     private $component1;
@@ -43,10 +34,6 @@ class ConcreteMediator implements Mediator
     }
 }
 
-/**
- * The Base Component provides the basic functionality of storing a mediator's
- * instance inside component objects.
- */
 class BaseComponent
 {
     protected $mediator;
@@ -62,10 +49,6 @@ class BaseComponent
     }
 }
 
-/**
- * Concrete Components implement various functionality. They don't depend on
- * other components. They also don't depend on any concrete mediator classes.
- */
 class Component1 extends BaseComponent
 {
     public function doA(): void
@@ -96,9 +79,6 @@ class Component2 extends BaseComponent
     }
 }
 
-/**
- * The client code.
- */
 $c1 = new Component1();
 $c2 = new Component2();
 $mediator = new ConcreteMediator($c1, $c2);

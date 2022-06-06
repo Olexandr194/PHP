@@ -1,11 +1,7 @@
 <?php
 
-/**
- * Editor which have possibility to save and restore the state if necessary.
- */
 class Editor
 {
-    // content is hidden
     private $content = '';
 
     public function type(string $words)

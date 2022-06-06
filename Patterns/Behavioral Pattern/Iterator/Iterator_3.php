@@ -1,25 +1,26 @@
 <?php
 
-interface Aggregate
+interface Collection
 {
     public function CreateIterator();
 }
 
-class ConcreteAggregate implements Aggregate
+class CollectionOne implements Collection
+
 {
     public function CreateIterator()
     {
         $list = [
-            "a",
-            "b",
-            "c",
-            "d",
+            "some text",
+            "more text",
+            "another one text",
+            "different text",
         ];
-        return new ConcreteIterator($list);
+        return new CollectionOneIterator($list);
     }
 }
 
-interface MyIterator
+interface TestIterator
 {
     public function First();
     public function Next();
@@ -27,7 +28,7 @@ interface MyIterator
     public function CurrentItem();
 }
 
-class ConcreteIterator implements MyIterator
+class CollectionOneIterator implements TestIterator
 {
     private $list;
     private $index;
@@ -56,8 +57,8 @@ class ConcreteIterator implements MyIterator
         return $this->list[$this->index];
     }
 }
-$agreegate = new ConcreteAggregate();
-$iterator = $agreegate->CreateIterator();
+$collection = new CollectionOne();
+$iterator = $collection->CreateIterator();
 
 while (!$iterator->IsDone()) {
     echo $iterator->CurrentItem(), PHP_EOL;
