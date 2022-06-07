@@ -1,15 +1,7 @@
 <?php
 
-/**
- * The Context defines the interface of interest to clients. It also maintains a
- * reference to an instance of a State subclass, which represents the current
- * state of the Context.
- */
 class Context
 {
-    /**
-     * @var State A reference to the current state of the Context.
-     */
     private $state;
 
     public function __construct(State $state)
