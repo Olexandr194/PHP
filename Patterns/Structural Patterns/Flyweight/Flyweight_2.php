@@ -1,50 +1,81 @@
 <?php
 
-class Tea
+class Flyweight
 {
+    private $sharedState;
 
-}
-
-class TeaMaker
-{
-    protected $availableTea = [];
-
-    public function make($preference)
+    public function __construct($sharedState)
     {
-        if (empty($this->availableTea[$preference])) {
-            $this->availableTea[$preference] = new Tea();
-        }
-        return $this->availableTea[$preference];
+        $this->sharedState = $sharedState;
+    }
+
+    public function operation($uniqueState)
+    {
+        $s = json_encode($this->sharedState);
+        $u = json_encode($uniqueState);
+        echo 'Shared: (' . $s . '). Unique: (' . $u . ').' . PHP_EOL;
     }
 }
 
-class TeaShop
+class FlyweightFactory
 {
-    protected $orders;
-    protected $teaMaker;
+    private $flyweights = [];
 
-    public function __construct(TeaMaker $teaMaker)
+    public function __construct($initialFlyweights)
     {
-        $this->teaMaker = $teaMaker;
-    }
-    public function takeOrder($teaType, $table)
-    {
-        $this->orders[$table] = $this->teaMaker->make($teaType);
-    }
-
-    public function serve()
-    {
-        foreach ($this->orders as $table => $tea) {
-            echo 'Serving tea to table #' . $table . PHP_EOL;
+        foreach ($initialFlyweights as $state) {
+            $this->flyweights[$this->getKey($state)] = new Flyweight($state);
         }
     }
+
+    private function getKey($state)
+    {
+        ksort($state);
+
+        return implode("_", $state);
+    }
+
+    public function getFlyweight($sharedState): Flyweight
+    {
+        $key = $this->getKey($sharedState);
+
+        if (!isset($this->flyweights[$key])) {
+            echo 'FlyweightFactory: Can\'t find a flyweight, creating new one.' . PHP_EOL;
+            $this->flyweights[$key] = new Flyweight($sharedState);
+        } else {
+            echo 'FlyweightFactory: Reusing existing flyweight.' . PHP_EOL;
+        }
+
+        return $this->flyweights[$key];
+    }
+
+    public function listFlyweights()
+    {
+        $count = count($this->flyweights);
+        echo PHP_EOL . 'FlyweightFactory: ' . PHP_EOL;
+        foreach ($this->flyweights as $key => $flyweight) {
+            echo $key . PHP_EOL;
+        }
+    }
 }
 
-$teaMaker = new TeaMaker();
-$shop = new TeaShop($teaMaker);
+function addCarToDatabase(FlyweightFactory $ff, $plates, $brand, $color) {
+    echo PHP_EOL . 'Adding a car to database.' . PHP_EOL;
+    $flyweight = $ff->getFlyweight([$brand, $color]);
+    $flyweight->operation([$plates]);
+}
 
-$shop->takeOrder('less sugar', 1);
-$shop->takeOrder('more milk', 2);
-$shop->takeOrder('without sugar', 5);
+$factory = new FlyweightFactory([
+    ["Chevrolet", "pink"],
+    ["Mercedes Benz", "black"],
+    ["Mercedes Benz", "red"],
+    ["BMW", "red"],
+    ["BMW", "white"],
+]);
+$factory->listFlyweights();
 
-$shop->serve();
+addCarToDatabase($factory, "25689", "BMW", "red",);
+
+addCarToDatabase($factory, "48596", "BMW", "black",);
+
+$factory->listFlyweights();

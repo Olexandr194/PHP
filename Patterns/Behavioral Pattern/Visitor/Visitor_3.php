@@ -1,11 +1,11 @@
 <?php
 
-interface Shop
+interface Products
 {
     public function accept(Visitor $visitor);
 }
 
-class CheapStuff implements Shop
+class CheapStuff implements Products
 {
     public function accept(Visitor $visitor)
     {
@@ -18,7 +18,7 @@ class CheapStuff implements Shop
     }
 }
 
-class ExpensiveStuff implements Shop
+class ExpensiveStuff implements Products
 {
     public function accept(Visitor $visitor)
     {
@@ -38,7 +38,7 @@ interface Visitor
     public function visitExpensiveStuff(ExpensiveStuff $element);
 }
 
-class ConcreteVisitor1 implements Visitor
+class Discount implements Visitor
 {
     public function visitCheapStuff(CheapStuff $element)
     {
@@ -51,7 +51,7 @@ class ConcreteVisitor1 implements Visitor
     }
 }
 
-class ConcreteVisitor2 implements Visitor
+class AddingToDatabase implements Visitor
 {
     public function visitCheapStuff(CheapStuff $element)
     {
@@ -77,10 +77,10 @@ $components = [
 ];
 
 echo PHP_EOL;
-$visitor1 = new ConcreteVisitor1();
+$visitor1 = new Discount();
 clientCode($components, $visitor1);
 echo PHP_EOL;
 
 
-$visitor2 = new ConcreteVisitor2();
+$visitor2 = new AddingToDatabase();
 clientCode($components, $visitor2);
