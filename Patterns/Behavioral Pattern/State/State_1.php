@@ -9,9 +9,6 @@ class Context
         $this->transitionTo($state);
     }
 
-    /**
-     * The Context allows changing the State object at runtime.
-     */
     public function transitionTo(State $state): void
     {
         echo "Context: Transition to " . get_class($state) . ".\n";
@@ -19,9 +16,6 @@ class Context
         $this->state->setContext($this);
     }
 
-    /**
-     * The Context delegates part of its behavior to the current State object.
-     */
     public function request1(): void
     {
         $this->state->handle1();
@@ -33,17 +27,8 @@ class Context
     }
 }
 
-/**
- * The base State class declares methods that all Concrete State should
- * implement and also provides a backreference to the Context object, associated
- * with the State. This backreference can be used by States to transition the
- * Context to another State.
- */
 abstract class State
 {
-    /**
-     * @var Context
-     */
     protected $context;
 
     public function setContext(Context $context)
@@ -56,10 +41,6 @@ abstract class State
     abstract public function handle2(): void;
 }
 
-/**
- * Concrete States implement various behaviors, associated with a state of the
- * Context.
- */
 class ConcreteStateA extends State
 {
     public function handle1(): void
@@ -90,9 +71,8 @@ class ConcreteStateB extends State
     }
 }
 
-/**
- * The client code.
- */
+
 $context = new Context(new ConcreteStateA());
 $context->request1();
+echo PHP_EOL;
 $context->request2();

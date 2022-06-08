@@ -1,101 +1,80 @@
 <?php
 
-class Person {
+class Camera
+{
+    private $state;
 
-    private $currentMood;
-    private $name;
-
-    public function __construct (Mood $mood, string $name) {
-        $this->setState($mood);
-        $this->name = $name;
+    public function __construct(State $state)
+    {
+        $this->transitionTo($state);
     }
 
-    public function setState (Mood $mood) {
-        $this->currentMood = $mood;
+    public function transitionTo(State $state)
+    {
+        $this->state = $state;
+        $this->state->setContext($this);
     }
 
-    public function insult () {
-        $this->currentMood->insult($this);
+    public function request1()
+    {
+        $this->state->action1();
     }
 
-    public function getName () {
-        $this->currentMood->getName($this, $this->name);
-    }
-
-    public function hug () {
-        $this->currentMood->hug($this);
-    }
-
-    public function say (string $msg) {
-        echo($msg . PHP_EOL);
+    public function request2()
+    {
+        $this->state->action2();
     }
 }
 
-abstract class Mood {
+abstract class State
+{
+    protected $context;
 
-    public abstract function insult (Person $context);
+    public function setContext(Camera $context)
+    {
+        $this->context = $context;
+    }
 
-    public abstract function hug (Person $context);
+    abstract public function action1();
 
-    public abstract function getName (Person $context, string $name);
+    abstract public function action2();
 }
 
-class Happy extends Mood {
-
-    public function insult (Person $context) {
-        $context->say("Oh! That wasn't nice");
-        $context->setState(new Neutral());
+class CameraOnOff extends State
+{
+    public function action1()
+    {
+        echo 'Камеру увімкнено. Можна почати запис';
+        $this->context->transitionTo(new RecordStartStop());
     }
 
-    public function hug (Person $context) {
-        $context->say("Oh! That was nice, thanks");
-    }
-
-    public function getName (Person $context, string $name) {
-        $context->say("Oh! Hello dear friend. My name is {$name}");
-    }
-}
-
-class Neutral extends Mood {
-
-    public function insult (Person $context) {
-        $context->say("What the heck do you want?");
-        $context->setState(new Angry());
-    }
-
-    public function hug (Person $context) {
-        $context->say("Thanks");
-        $context->setState(new Happy());
-    }
-
-    public function getName (Person $context, string $name) {
-        $context->say("My name is {$name}");
+    public function action2()
+    {
+        echo 'Камеру вимкнено.';
     }
 
 }
 
-class Angry extends Mood {
-
-    public function insult (Person $context) {
-        $context->say("You too...");
+class RecordStartStop extends State
+{
+    public function action1()
+    {
+        echo 'Триває запис відео...';
     }
 
-    public function hug (Person $context) {
-        $context->say("Hm...");
-        $context->setState(new Neutral());
+    public function action2()
+    {
+        echo 'Запис відео зупинено.';
+        $this->context->transitionTo(new CameraOnOff());
     }
-
-    public function getName (Person $context, string $name) {
-        $context->say("{$name}. What's your problem?");
-    }
-
 }
 
-$jan = new Person(new Neutral(), "Jan");
-$jan->getName();
-$jan->insult();
-$jan->getName();
-$jan->hug();
-$jan->getName();
-$jan->hug();
-$jan->getName();
+
+$context = new Camera(new CameraOnOff());
+$context->request1();
+echo PHP_EOL;
+$context->request1();
+echo PHP_EOL;
+$context->request2();
+echo PHP_EOL;
+$context->request2();

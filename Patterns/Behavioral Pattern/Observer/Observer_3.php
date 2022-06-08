@@ -1,89 +1,85 @@
 <?php
 
-interface Observer {
-    public function addCurrency(Currency $currency);
+abstract class Observer
+{
+    abstract function update(Subject $subject_in);
 }
 
-class priceSimulator implements Observer {
-    private $currencies;
+abstract class Subject
+{
+    abstract function attach(Observer $observer_in);
 
-    public function __construct() {
-        $this->currencies = array();
+    abstract function detach(Observer $observer_in);
+
+    abstract function notify();
+}
+
+
+class Client extends Observer
+{
+    public function __construct()
+    {
     }
 
-    public function addCurrency(Currency $currency) {
-        array_push($this->currencies, $currency);
+    public function update(Subject $subject)
+    {
+        echo ' Some new stuff: ' . $subject->getFavorites();
+    }
+}
+
+class Shop extends Subject
+{
+    private $favoriteProducts = NULL;
+    private $observers = array();
+
+    function __construct()
+    {
     }
 
-    public function updatePrice() {
-        foreach ($this->currencies as $currency) {
-            $currency->update();
+    function attach(Observer $observer_in)
+    {
+        $this->observers[] = $observer_in;
+    }
+
+    function detach(Observer $observer_in)
+    {
+        foreach ($this->observers as $key => $oval) {
+            if ($oval == $observer_in) {
+                unset($this->observers[$key]);
+            }
         }
     }
+
+    function notify()
+    {
+        foreach ($this->observers as $obs) {
+            $obs->update($this);
+        }
+    }
+
+    function updateFavorites($newFavorites)
+    {
+        $this->favorites = $newFavorites;
+        $this->notify();
+    }
+
+    function getFavorites()
+    {
+        return $this->favorites;
+    }
 }
 
-interface Currency {
-    public function update();
-    public function getPrice();
-}
 
-class Pound implements Currency {
-    private $price;
-
-    public function __construct($price) {
-        $this->price = $price;
-        echo 'Pound Original Price: ' . $price;
-    }
-
-    public function update() {
-        $this->price = $this->getPrice();
-        echo 'Pound Updated Price :' . $this->price . PHP_EOL;
-    }
-
-    public function getPrice() {
-        return f_rand(0.65, 0.71);
-    }
-
-}
-
-class Yen implements Currency {
-    private $price;
-
-    public function __construct($price) {
-        $this->price = $price;
-        echo 'Yen Original Price : ' . $price;
-    }
-
-    public function update() {
-        $this->price = $this->getPrice();
-        echo 'Yen Updated Price : ' . $this->price;
-    }
-
-    public function getPrice() {
-        return f_rand(120.52, 122.50);
-    }
-
-}
-
-function f_rand($min=0,$max=1,$mul=1000000){
-    if ($min>$max) return false;
-    return mt_rand($min*$mul,$max*$mul)/$mul;
-}
-
-$priceSimulator = new priceSimulator();
-
-$currency1 = new Pound(0.60);
+$shop = new Shop();
+$client = new Client();
+$shop->attach($client);
 echo PHP_EOL;
-$currency2 = new Yen(122);
-
-$priceSimulator->addCurrency($currency1);
+$shop->updateFavorites('apple, coffee');
+echo PHP_EOL;
+$shop->updateFavorites('plum, pineapple, pear');
+echo PHP_EOL;
+$shop->detach($client);
+echo PHP_EOL;
+$shop->updateFavorites('banana, tea, cookie, ');
 echo PHP_EOL;
 
-$priceSimulator->addCurrency($currency2);
-
-echo PHP_EOL;
-$priceSimulator->updatePrice();
-echo PHP_EOL;
-echo PHP_EOL;
-$priceSimulator->updatePrice();
-echo PHP_EOL;

@@ -4,7 +4,7 @@ interface Handler
 {
     public function setNext(Handler $handler): Handler;
 
-    public function handle(string $request): ?string;
+    public function handle($request);
 }
 
 abstract class AbstractChain implements Handler
@@ -17,7 +17,7 @@ abstract class AbstractChain implements Handler
         return $handler;
     }
 
-    public function handle(string $request): ?string
+    public function handle($request)
     {
         if ($this->nextHandler) {
             return $this->nextHandler->handle($request);
@@ -28,7 +28,7 @@ abstract class AbstractChain implements Handler
 
 class Chain1 extends AbstractChain
 {
-    public function handle(string $request): ?string
+    public function handle($request)
     {
         if ($request === "task for chain 1") {
             return "Done by Chain1 - " . $request . ".\n";
@@ -40,7 +40,7 @@ class Chain1 extends AbstractChain
 
 class Chain2 extends AbstractChain
 {
-    public function handle(string $request): ?string
+    public function handle($request)
     {
         if ($request === "task for chain 2") {
             return "Done by Chain2 - " . $request . ".\n";
@@ -52,7 +52,7 @@ class Chain2 extends AbstractChain
 
 class Chain3 extends AbstractChain
 {
-    public function handle(string $request): ?string
+    public function handle($request)
     {
         if ($request === "task for chain 3") {
             return "Done by Chain3 - " . $request . ".\n";
@@ -82,7 +82,6 @@ $c3 = new Chain3();
 $c1->setNext($c2)->setNext($c3);
 
 
-clientCode($c1);
-echo PHP_EOL;
 clientCode($c2);
+
 

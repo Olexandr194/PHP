@@ -80,5 +80,5 @@ $c1 = new Buttons();
 $c2 = new Actions();
 $mediator = new Editor($c1, $c2);
 
-$c1->doB();
+$c1->doA();
 

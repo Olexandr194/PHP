@@ -58,4 +58,4 @@ echo $editor->getContent() . PHP_EOL;
 
 
 $editor->restore($memento);
-echo $editor->getContent() . PHP_EOL;
+/*echo $editor->getContent() . PHP_EOL;*/

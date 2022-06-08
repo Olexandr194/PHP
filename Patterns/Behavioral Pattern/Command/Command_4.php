@@ -89,7 +89,7 @@ function clientCode(){
     echo PHP_EOL;
     echo PHP_EOL;
 
-    $editedText = new EditorSetToLower($text);
+    $editedText = new EditorSetToUpper($text);
     callCommand($editedText);
 
     echo 'AFTER: ';

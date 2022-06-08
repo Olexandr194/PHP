@@ -1,88 +1,101 @@
 <?php
 
-class BookContext {
-    private $book = NULL;
-    private $bookTitleState = NULL;
-    //bookList is not instantiated at construct time
-    public function __construct($book_in) {
-        $this->book = $book_in;
-        $this->setTitleState(new BookTitleStateStars());
-    }
-    public function getBookTitle() {
-        return $this->bookTitleState->showTitle($this);
-    }
-    public function getBook() {
-        return $this->book;
-    }
-    public function setTitleState($titleState_in) {
-        $this->bookTitleState = $titleState_in;
-    }
-}
+class Person {
 
-interface BookTitleStateInterface {
-    public function showTitle($context_in);
-}
+    private $currentMood;
+    private $name;
 
-class BookTitleStateExclaim implements BookTitleStateInterface {
-    private $titleCount = 0;
-    public function showTitle($context_in) {
-        $title = $context_in->getBook()->getTitle();
-        $this->titleCount++;
-        $context_in->setTitleState(new BookTitleStateStars());
-        return Str_replace(' ','!',$title);
+    public function __construct (Mood $mood, string $name) {
+        $this->setState($mood);
+        $this->name = $name;
+    }
+
+    public function setState (Mood $mood) {
+        $this->currentMood = $mood;
+    }
+
+    public function insult () {
+        $this->currentMood->insult($this);
+    }
+
+    public function getName () {
+        $this->currentMood->getName($this, $this->name);
+    }
+
+    public function hug () {
+        $this->currentMood->hug($this);
+    }
+
+    public function say (string $msg) {
+        echo($msg . PHP_EOL);
     }
 }
 
-class BookTitleStateStars implements BookTitleStateInterface {
-    private $titleCount = 0;
-    public function showTitle($context_in) {
-        $title = $context_in->getBook()->getTitle();
-        $this->titleCount++;
-        if (1 < $this->titleCount) {
-            $context_in->setTitleState(new BookTitleStateExclaim);
-        }
-        return Str_replace(' ','*',$title);
+abstract class Mood {
+
+    public abstract function insult (Person $context);
+
+    public abstract function hug (Person $context);
+
+    public abstract function getName (Person $context, string $name);
+}
+
+class Happy extends Mood {
+
+    public function insult (Person $context) {
+        $context->say("Oh! That wasn't nice");
+        $context->setState(new Neutral());
+    }
+
+    public function hug (Person $context) {
+        $context->say("Oh! That was nice, thanks");
+    }
+
+    public function getName (Person $context, string $name) {
+        $context->say("Oh! Hello dear friend. My name is {$name}");
     }
 }
 
-class Book {
-    private $author;
-    private $title;
-    function __construct($title_in, $author_in) {
-        $this->author = $author_in;
-        $this->title  = $title_in;
+class Neutral extends Mood {
+
+    public function insult (Person $context) {
+        $context->say("What the heck do you want?");
+        $context->setState(new Angry());
     }
-    function getAuthor() {return $this->author;}
-    function getTitle() {return $this->title;}
-    function getAuthorAndTitle() {
-        return $this->getTitle() . ' by ' . $this->getAuthor();
+
+    public function hug (Person $context) {
+        $context->say("Thanks");
+        $context->setState(new Happy());
     }
+
+    public function getName (Person $context, string $name) {
+        $context->say("My name is {$name}");
+    }
+
 }
 
-writeln('BEGIN TESTING STATE PATTERN');
-writeln('');
+class Angry extends Mood {
 
-$book = new Book('PHP for Cats','Larry Truett');;
-$context = new bookContext($book);
+    public function insult (Person $context) {
+        $context->say("You too...");
+    }
 
-writeln('test 1 - show name');
-writeln($context->getBookTitle());
-writeln('');
+    public function hug (Person $context) {
+        $context->say("Hm...");
+        $context->setState(new Neutral());
+    }
 
-writeln('test 2 - show name');
-writeln($context->getBookTitle());
-writeln('');
+    public function getName (Person $context, string $name) {
+        $context->say("{$name}. What's your problem?");
+    }
 
-writeln('test 3 - show name');
-writeln($context->getBookTitle());
-writeln('');
-
-writeln('test 4 - show name');
-writeln($context->getBookTitle());
-writeln('');
-
-writeln('END TESTING STATE PATTERN');
-
-function writeln($line_in) {
-    echo $line_in."<br/>";
 }
+
+$jan = new Person(new Neutral(), "Jan");
+$jan->getName();
+$jan->insult();
+$jan->getName();
+$jan->hug();
+$jan->getName();
+$jan->hug();
+$jan->getName();
