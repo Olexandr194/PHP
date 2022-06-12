@@ -78,7 +78,7 @@ $shop->updateFavorites('apple, coffee');
 echo PHP_EOL;
 $shop->updateFavorites('plum, pineapple, pear');
 echo PHP_EOL;
-$shop->detach($client);
+/*$shop->detach($client);*/
 echo PHP_EOL;
 $shop->updateFavorites('banana, tea, cookie, ');
 echo PHP_EOL;

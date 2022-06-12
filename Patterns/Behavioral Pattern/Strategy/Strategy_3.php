@@ -62,7 +62,7 @@ class RoutePlanner {
 
 $route = new RoutePlanner('1st street', '34th street');
 
-$strategyContext = new StrategyContext('C');
+$strategyContext = new StrategyContext('B');
 
 echo PHP_EOL;
 echo $strategyContext->showSpecialRoute($route);
