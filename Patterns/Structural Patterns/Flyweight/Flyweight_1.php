@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * The Flyweight stores a common portion of the state (also called intrinsic
+ * state) that belongs to multiple real business entities. The Flyweight accepts
+ * the rest of the state (extrinsic state, unique for each entity) via its
+ * method parameters.
+ */
 class Flyweight
 {
     private $sharedState;
@@ -17,8 +22,17 @@ class Flyweight
     }
 }
 
+/**
+ * The Flyweight Factory creates and manages the Flyweight objects. It ensures
+ * that flyweights are shared correctly. When the client requests a flyweight,
+ * the factory either returns an existing instance or creates a new one, if it
+ * doesn't exist yet.
+ */
 class FlyweightFactory
 {
+    /**
+     * @var Flyweight[]
+     */
     private $flyweights = [];
 
     public function __construct(array $initialFlyweights)
@@ -28,6 +42,9 @@ class FlyweightFactory
         }
     }
 
+    /**
+     * Returns a Flyweight's string hash for a given state.
+     */
     private function getKey(array $state): string
     {
         ksort($state);
@@ -35,6 +52,9 @@ class FlyweightFactory
         return implode("_", $state);
     }
 
+    /**
+     * Returns an existing Flyweight with a given state or creates a new one.
+     */
     public function getFlyweight(array $sharedState): Flyweight
     {
         $key = $this->getKey($sharedState);
@@ -59,6 +79,10 @@ class FlyweightFactory
     }
 }
 
+/**
+ * The client code usually creates a bunch of pre-populated flyweights in the
+ * initialization stage of the application.
+ */
 $factory = new FlyweightFactory([
     ["Chevrolet", "Camaro2018", "pink"],
     ["Mercedes Benz", "C300", "black"],
@@ -68,6 +92,8 @@ $factory = new FlyweightFactory([
     // ...
 ]);
 $factory->listFlyweights();
+
+// ...
 
 function addCarToPoliceDatabase(
     FlyweightFactory $ff, $plates, $owner,
