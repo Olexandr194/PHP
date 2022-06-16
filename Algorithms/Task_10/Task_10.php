@@ -12,21 +12,20 @@ function fromTimeToTime($someNumber)
 {
     $special_date = mktime(0, 0, 0);
 
-    if($someNumber > 359999) {
-        echo 'Число не може бути > 359999!';
+    if($someNumber < 0 || $someNumber > 359999) {
+        echo 'Введіть число від 0 до 359999!';
         exit();
     }
 
     $o = round($someNumber / 3600);
+
     if ($o < 10) {
         $o = '0'.$o;
     } elseif ($o > 99) {
         $o = 99;
     }
-
     echo date($o . ':i:s', $special_date + $someNumber);
 }
 
-
-fromTimeToTime(359999);
+fromTimeToTime(210);
 

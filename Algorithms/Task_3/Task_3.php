@@ -38,7 +38,7 @@ function check($someForm)
             $stack[$stack_size++] = $someForm[$i];
         else if (in_array($someForm[$i],array_keys($para)))
         {
-            $last = $stack_size? $stack[$stack_size-1] : '';
+            $last = $stack_size ? $stack[$stack_size-1] : '';
             if ($last!=$para[$someForm[$i]])
                 return false;
             else
@@ -48,7 +48,7 @@ function check($someForm)
     return count($stack)==0;
 }
 
-print check($someForm)?'Виконано успішно!':"Перевірте правильність розстановки знаків: '()', '[]'. ";
+print check($someForm) ? 'Виконано успішно!':"Перевірте правильність розстановки знаків: '()', '[]'. ";
 
 
 

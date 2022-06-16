@@ -1,15 +1,32 @@
+<!--Создать класс API с двумя методами
+1-принимает массив параметров и возвращает строку json
+2-принимает json и возвращает массив-->
+
+
 <?php
-$res = file_get_contents('data.json');
 
-$data = json_decode($res, true);
-var_dump($data);
+class ApiTest
+{
+    private $fileName;
+    private $data;
 
+    public function JsonToArr($fileName)
+    {
+        $res = file_get_contents($fileName);
+        $data = json_decode($res, true);
+        var_dump($data);
+    }
 
-$jsonData = json_encode($data);
-file_put_contents('t.json', $jsonData);
+    public function ArrToJson($data)
+    {
+        $jsonData = json_encode($data);
+        file_put_contents('t1.json', $jsonData);
+    }
+}
+$fileName = 'data.json';
 
-
-
+$apiTest = new ApiTest();
+$apiTest->JsonToArr($fileName);
 
 
 

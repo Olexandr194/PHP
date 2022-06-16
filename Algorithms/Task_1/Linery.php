@@ -56,10 +56,11 @@ function minInArr($arr, $min_in_arr)
 echo "<p>Індекс з максимальними значеннями: </p>";
 $start = microtime(true);
 var_dump(maxInArr($arr, $max_in_arr));
-$done = (round(microtime(true) - $start, 8))*1000; //0.03
-echo "<p> Час: $done </p>";
+
 
 echo PHP_EOL;
 echo "<p>Індекс з мінімальним значеннями: </p>";
 var_dump(minInArr($arr, $min_in_arr));
 
+$done = (round(microtime(true) - $start, 8))*1000; //0.03
+echo "<p> Час: $done </p>";

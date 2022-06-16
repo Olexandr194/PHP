@@ -30,7 +30,7 @@ for ($i = 1; $i <= $array_length; $i++) {
 }
 
 
-echo "<p>Індекс з максимальними значеннями: </p>";
+/*echo "<p>Індекс з максимальним значеннями: </p>";
 $start = microtime(true);
 var_dump(array_search(max($arr),$arr));
 $done = (round(microtime(true) - $start, 8))*1000; //0.07
@@ -38,15 +38,10 @@ echo "<p> Час: $done </p>";
 
 
 echo "<p>Індекс з мінімальним значеннями: </p>";
-var_dump(array_search(min($arr),$arr));
+var_dump(array_search(min($arr),$arr));*/
 
 
-
-
-
-
-
-/*echo "<p>Індекси з максимальними значеннями: </p>";
+echo "<p>Індекси з максимальними значеннями: </p>";
 $start = microtime(true);
 var_dump(array_keys($arr,max($arr)));
 
@@ -54,4 +49,4 @@ echo "<p>Індекси з мінімальним значеннями: </p>";
 var_dump(array_keys($arr,min($arr)));
 
 $done = round(microtime(true) - $start, 6);
-echo "<p> Час: $done </p>";*/
+echo "<p> Час: $done </p>";
