@@ -2,17 +2,17 @@
 
 class Tree
 {
-    public $category = array();
+    public $data = array();
     public $tree = array();
 
     public function __construct()
     {
-        $this->category = $this->getCategoryArray();
+        $this->data = $this->getCategoryArray();
     }
 
     private function getCategoryArray()
     {
-        $category_array = [
+        $arr = [
             0 => [
                 [
                     'id_tree_test' => 2,
@@ -73,13 +73,13 @@ class Tree
             ],*/
         ];
 
-        return $category_array;
+        return $arr;
     }
 
     public function buildTree($parent_id, $level)
     {
-        if (isset($this->category[$parent_id])) {
-            foreach ($this->category[$parent_id] as $value) {
+        if (isset($this->data[$parent_id])) {
+            foreach ($this->data[$parent_id] as $value) {
                 echo "<div style=\"margin-left:" . ($level * 25) . "px;\">" . $value["id_tree_test"] . " : " . $value["title"] . "</div>";
                 $level++;
                 $this->buildTree($value["id_tree_test"], $level);
