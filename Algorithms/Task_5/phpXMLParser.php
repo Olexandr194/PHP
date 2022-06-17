@@ -29,5 +29,5 @@ class XmlParser1
 $xml = simplexml_load_file("data.xml") or die("Не вдалось завантажити XML-файл :(");
 
 $parser = new XmlParser1();
-$parser->getData($xml, 'Email');
+$parser->getData($xml, 'Address');
 

@@ -27,5 +27,5 @@ function fromTimeToTime($someNumber)
     echo date($o . ':i:s', $special_date + $someNumber);
 }
 
-fromTimeToTime(210);
+fromTimeToTime(359999);
 

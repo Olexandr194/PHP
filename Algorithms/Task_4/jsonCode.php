@@ -24,9 +24,14 @@ class ApiTest
     }
 }
 $fileName = 'data.json';
+$res = file_get_contents($fileName);
+$data = json_decode($res, true);
 
 $apiTest = new ApiTest();
+
 $apiTest->JsonToArr($fileName);
+
+$apiTest->ArrToJson($data);
 
 
 
