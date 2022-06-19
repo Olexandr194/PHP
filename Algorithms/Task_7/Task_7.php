@@ -9,44 +9,47 @@
 part2: o e o o = o e o o*/
 
 function testString($string, $part1, $part2)
-{
-    $seq1 = str_split($string);
-    $seq2 = str_split($part1);
-    $seq3 = str_split($part2);
+    {
+        $seq1 = str_split($string);
+        $seq2 = str_split($part1);
+        $seq3 = str_split($part2);
 
-    $x = strlen($string);
-    $x1 = strlen($string);
+        $x = strlen($string);
+        $x1 = strlen($string);
+        $y = strlen($part1);
+        $z = strlen($part2);
 
-    $y = strlen($part1);
-    $z = strlen($part2);
+        while ($x > 0 && $y > 0) {
+            if ($seq1[$x - 1] == $seq2[$y - 1]) {
+                $x--;
+                $y--;
+            } else {
+                $x--;
+            }
+        }
+        while ($x1 > 0 && $z > 0) {
+            if ($seq1[$x1 - 1] == $seq3[$z - 1]) {
+                $x1--;
+                $z--;
+            } else {
+                $x1--;
+            }
+        }
 
-    while ($x > 0 && $y > 0) {
-        if ($seq1[$x - 1] == $seq2[$y - 1]) {
-            $x--;
-            $y--;
+        if ($y == 0 && $z == 0) {
+            echo "Result: YES";
         } else {
-            $x--;
+            echo "Result: NO";
         }
     }
-    while ($x1 > 0 && $z > 0) {
-        if ($seq1[$x1 - 1] == $seq3[$z - 1]) {
-            $x1--;
-            $z--;
-        } else {
-            $x1--;
-        }
-    }
-
-    if ($y == 0 && $z == 0) {
-        echo "Result: YES";
-    } else {
-        echo "Result: NO";
-    }
-}
 
 $string = 'codecool';
 $part1 = 'oeoo';
-$part2 = 'cdw';
+$part2 = 'cdcl';
 
-
+$start = microtime(true);
 testString($string, $part1, $part2);
+$done = (round(microtime(true) - $start, 8))*1000; //0.08
+
+echo PHP_EOL;
+echo "<p> Час: $done </p>";
