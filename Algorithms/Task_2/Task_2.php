@@ -24,7 +24,7 @@ class Tree
                 [
                     'id_tree_test' => 4,
                     'id_parent' => 1,
-                    'title' => "Четыре"
+                    'title' => "Чотири"
                 ]
 
             ],
@@ -37,14 +37,14 @@ class Tree
                 [
                     'id_tree_test' => 5,
                     'id_parent' => 2,
-                    'title' => "Пять"
+                    'title' => "П'ять"
                 ]
             ],
             /*3 => [
                 [
                     'id_tree_test' => 8,
                     'id_parent' => 3,
-                    'title' => "Восем"
+                    'title' => "Вісім"
                 ]
             ],*/
             4 => [
@@ -56,19 +56,19 @@ class Tree
                 [
                     'id_tree_test' => 6,
                     'id_parent' => 4,
-                    'title' => "Шесть"
+                    'title' => "Шість"
                 ],
                 [
                     'id_tree_test' => 7,
                     'id_parent' => 4,
-                    'title' => "Семь"
+                    'title' => "Сім"
                 ]*/
             ],
             /*7 => [
                 [
                     'id_tree_test' => 9,
                     'id_parent' => 7,
-                    'title' => "Девять"
+                    'title' => "Дев'ять"
                 ]
             ],*/
         ];
