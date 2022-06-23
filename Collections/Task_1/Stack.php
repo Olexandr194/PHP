@@ -1,17 +1,17 @@
 <?php
 
-class CinemaRow
+class TaskList
 {
     protected $stack;
-    protected $seatsLimit;
+    protected $limit;
 
-    public function init($stack = array(), $seatsLimit = 15) {
+    public function init($stack = array(), $limit = 15) {
         $this->stack = array_reverse($stack);
-        $this->seatsLimit = $seatsLimit;
+        $this->limit = $limit;
     }
 
     public function push($item) {
-        if (count($this->stack) < $this->seatsLimit) {
+        if (count($this->stack) < $this->limit) {
             array_unshift($this->stack, $item);
         } else {
             throw new RunTimeException('Стек переповнений!');
@@ -35,13 +35,13 @@ class CinemaRow
     }
 }
 
-$test = new CinemaRow();
-$test->init(['перший', 'другий'], 7);
-$test->push('третій');
-$test->push('четвертий');
-$test->push('п\'ятий');
-$test->push('шостий');
-$test->push('сьомий');
+$test = new TaskList();
+$test->init(['завдання з пріоритетом 1', 'завдання з пріоритетом 2'], 7);
+$test->push('завдання з пріоритетом 3');
+$test->push('завдання з пріоритетом 4');
+$test->push('завдання з пріоритетом 5');
+$test->push('завдання з пріоритетом 6');
+$test->push('завдання з пріоритетом 7');
 
 
 echo $test->top();
