@@ -21,7 +21,7 @@ function weightSorting ($numbers) {
             if (array_sum(str_split($sum[$n])) > array_sum(str_split($sum[$n+1]))) {
                 [$sum[$n], $sum[$n+1]] = [$sum[$n+1], $sum[$n]];
             }
-            elseif (array_sum(str_split($sum[$n])) == array_sum(str_split($sum[$n+1])) && str_split($sum[0]) < str_split($sum[0])) {
+            elseif (array_sum(str_split($sum[$n])) == array_sum(str_split($sum[$n+1])) && str_split($sum[$n][0]) > str_split($sum[$n+1][0])) {
                 [$sum[$n], $sum[$n+1]] = [$sum[$n+1], $sum[$n]];
             }
         }

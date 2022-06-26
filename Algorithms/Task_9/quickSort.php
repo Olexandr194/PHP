@@ -8,9 +8,9 @@ class QuickSort
             $start = [];
             $end = [];
             foreach ($arr as $v) {
-                if ($v <= $base) {
+                if ($v >= $base) {
                     $start[] = $v;
-                } elseif ($v > $base) {
+                } elseif ($v < $base) {
                     $end[] = $v;
                 }
             }

@@ -3,7 +3,6 @@
 class Tree
 {
     public $data = array();
-    public $tree = array();
 
     public function __construct()
     {
@@ -90,8 +89,6 @@ class Tree
 
 }
 
-$tree = new Tree();
-$tree->buildTree(0, 0);
 
 
 

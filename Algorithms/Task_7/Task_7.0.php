@@ -1,4 +1,12 @@
 <?php
+/*Может ли заданная строка s быть составлена из двух других строк, part1 и part2.
+Ограничение состоит в том, что символы в частях part1 и part2 должны быть в том же порядке, что и в s.
+Например:
+«codecool» — это слияние «cdw» и «oeoo»:
+ 	s: c o d e c o o l = codecool
+часть 1: c d c l = cdw
+part2: o e o o = o e o o*/
+
 
    function testString($string, $part1, $part2)
     {
@@ -51,7 +59,7 @@
     }
 $string = 'codecool';
 $part1 = 'oeoo';
-$part2 = 'dlw';
+$part2 = 'dlc';
 
 $start = microtime(true);
 testString($string, $part1, $part2);
