@@ -25,7 +25,8 @@ class BinaryTree
 
         if (is_null($this->root)) {
             $this->root = $node;
-        } else {
+        }
+        else {
             $this->insertNode($this->root, $node);
         }
     }
@@ -39,7 +40,6 @@ class BinaryTree
                 $this->insertNode($node->left, $newNode);
             }
         }
-
         if ($newNode->value > $node->value) {
             if ($node->right == null) {
                 $node->right = $newNode;
@@ -47,7 +47,6 @@ class BinaryTree
                 $this->insertNode($node->right, $newNode);
             }
         }
-
     }
 
     public function inOrderTraverse($node)
@@ -59,11 +58,6 @@ class BinaryTree
         }
     }
 
-    /**
-     *Preorder traversal, used to copy binary tree
-     *
-     * @param $node
-     */
     public function preOrderTraverse($node)
     {
         if ($node != null) {
@@ -73,11 +67,6 @@ class BinaryTree
         }
     }
 
-    /**
-     *Post order traversal folder system traversal
-     *
-     * @param $node
-     */
     public function postOrderTraverse($node)
     {
         if ($node != null) {
@@ -101,12 +90,6 @@ class BinaryTree
         return $node->value;
     }
 
-    /**
-     *Find the maximum value
-     *
-     * @param $node
-     * @return mixed
-     */
     public function findMax($node)
     {
         while ($node && $node->right != null) {
@@ -116,35 +99,20 @@ class BinaryTree
         return $node->value;
     }
 
-    /**
-     *Binary tree node search
-     *
-     * @param $node
-     * @param $value
-     * @return bool
-     */
     public function find($node, $value)
     {
         if ($node == null) {
-            return false;
+            return 'Не знайдено.';
         }
-
         if ($value > $node->value) {
             return $this->find($node->right, $value);
         } elseif ($value < $node->value) {
             return $this->find($node->left, $value);
         } else {
-            return true;
+            return 'Знайдено.';
         }
     }
 
-    /**
-     *Delete node in binary tree
-     *
-     * @param $node
-     * @param $value
-     * @return null
-     */
     public function removeNode($node, $value)
     {
         if ($node == null) {
@@ -162,8 +130,6 @@ class BinaryTree
             if ($node->left == null && $node->right == null) {
                 return null;
             }
-
-
             //In the second case, there is a left node or a right node
             if ($node->left == null) {
                 $node = $node->left;
@@ -210,7 +176,7 @@ $tree->insert(9);
 $tree->insert(1);
 $tree->insert(32);
 
-//dd($tree->root);
+var_dump ($tree->root);
 
 //Middle order traversal test
 //$tree->inOrderTraverse($tree->root);
@@ -232,10 +198,12 @@ $tree->insert(32);
 
 //Delete node test
 //dump($tree->root);
-//$result = $tree->removeNode($tree->root, 1);
-//dd($result);
+/*$result = $tree->removeNode($tree->root, 32);
+$tree->inOrderTraverse($tree->root);*/
 
 //dump($tree->root);
-$result = $nodeExists = $tree->find($tree->root, 654);;
 
-var_dump($result);
+/*
+$result = $nodeExists = $tree->find($tree->root, 8);;
+
+echo $result;*/
