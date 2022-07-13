@@ -14,7 +14,9 @@ $collection = new MyCollection($arr);
 
 /*Sort::bubbleSort($collection, 'REVERS');*/
 
-Sort::insertionSort($collection, 'AVERS');
+Sort::insertionSort($collection, 'REVERS');
+
+
 
 
 
