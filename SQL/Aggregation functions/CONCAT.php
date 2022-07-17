@@ -1,12 +1,7 @@
 <?php
 require_once '../MySQL.php';
 
-$sql = new MySQL(array(
-    'host' => 'localhost',
-    'username' => 'root',
-    'passwords' => 'baohrkirkQEF/55',
-    'dbname' => 'laravel_shop',
-));
+$sql = new MySQL;
 
 $sql1 = "SELECT CONCAT(products.title, ' ~ ', products.quantity, ' - ', products.price) as info 
          FROM products";
